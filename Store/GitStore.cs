@@ -48,6 +48,20 @@ public sealed class GitStore(string repoDir)
     public static string ProjectUrl(string serverBaseUrl, string project) =>
         $"{serverBaseUrl.TrimEnd('/')}/git/{project}";
 
+    /// <summary>读目录的 .agent 项目名（不存在或缺失返回 null）</summary>
+    public static string? ManifestName(string dir)
+    {
+        var f = Path.Combine(dir, ".agent");
+        if (!File.Exists(f)) return null;
+        var line = File.ReadLines(f).FirstOrDefault(l =>
+        {
+            var i = l.IndexOf(':');
+            return i > 0 && l[..i].Trim() == "name";
+        });
+        var sep = line?.IndexOf(':') ?? -1;
+        return sep < 0 ? null : line![(sep + 1)..].Trim();
+    }
+
     /// <summary>提交（无变化静默成功）</summary>
     public bool Commit(string message)
     {
