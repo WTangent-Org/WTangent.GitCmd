@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.10"/>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- 组件 = 纯 dll（Library）：空壳 ALC 加载后经 Entry 注册命令；无独立可执行 -->
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- 版本号与 release tag 对齐；release-please 管理 -->
+    <Version>0.0.1</Version>
+    <RootNamespace>WTangent.GitCmd</RootNamespace>
+    <AssemblyName>git-cmd</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 共享包：源生成器（analyzers）+ 契约（lib/net10.0）一个包 -->
+    <PackageReference Include="WTangent.Components" Version="0.0.2" PrivateAssets="all"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="WTangent.Components"/>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,13 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "include-v-in-tag": true,
+      "initial-version": "0.0.1",
+      "versioning": "always-bump-patch",
+      "extra-files": [
+        { "type": "xml", "path": "WTangent.GitCmd.csproj", "xpath": "//Version" }
+      ]
+    }
+  }
+}

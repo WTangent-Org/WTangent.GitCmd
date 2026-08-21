@@ -1,0 +1,11 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# IDE
+.vs/
+.idea/
+*.user
+
+# 本地 NuGet 源配置（D:\nuget-local）
+nuget.config
