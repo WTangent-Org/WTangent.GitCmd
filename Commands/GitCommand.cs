@@ -11,7 +11,7 @@ namespace WTangent.GitCmd.Commands;
 /// 本地模式（默认）：init/clone 是 wtangent 包装（.agent 清单 + 服务器解析），其余参数完全透传给真 git（在项目目录执行）。
 /// 远程模式（--server）：客户端触发服务端执行——调 serve 的 /git-exec，在服务端项目目录跑 git。
 /// 透传示例：wtangent git push / add -A / commit -m "..." / pull / branch / status / checkout —— 等价于在该目录跑 git。</summary>
-[AgentComponent]
+[AgentCommand]
 public sealed class GitCommand : Command
 {
     private static readonly Option<string?> DirOption = new("--dir") { Description = "项目目录（缺省当前目录；本地透传时 git 在此执行）" };
