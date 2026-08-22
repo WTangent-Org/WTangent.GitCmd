@@ -12,7 +12,7 @@ public sealed partial class Entry : IEntry
 
     public string Identifier => "git";
     public string Name => "git 命令";
-    public Command[] Commands => CollectedCommands;
+    public (Command Command, string? ParentPath)[] Commands => CollectedCommands;
 
     public Task StartAsync(Application app)
     {
