@@ -16,7 +16,7 @@ public sealed class ServerRegistry
     private static string StorePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "agent", "remotes.json");
 
-    private static IAppStore? AppStore => Entry.App?.Store;
+    private static IAppStore? AppStore => Entry.Current?.App?.Store;
 
     public string? Get(string name) => Load().FirstOrDefault(r => r.Name == name)?.Url;
 
