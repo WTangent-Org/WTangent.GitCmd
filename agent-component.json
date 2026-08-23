@@ -1,1 +1,1 @@
-{ "name": "git", "asset": "git-cmd" }
+{ "name": "git", "asset": "git-cmd", "minCore": "0.0.9", "commands": ["git"] }
