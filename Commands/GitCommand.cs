@@ -1,7 +1,6 @@
 using System.CommandLine;
 using System.Text;
 using System.Text.Json;
-using WTangent.Core;
 using WTangent.GitCmd.Store;
 
 namespace WTangent.GitCmd.Commands;
@@ -17,6 +16,7 @@ public sealed class GitCommand : Command
     private static readonly Option<string?> DirOption = new("--dir") { Description = "项目目录（缺省当前目录；本地透传时 git 在此执行）" };
     private static readonly Option<string?> ServerOption = new("--server") { Description = "远程模式：在指定服务器（remotes.json）上执行 git" };
     private static readonly Option<string?> ProjectOption = new("--project") { Description = "远程模式的项目名（缺省读当前目录 .agent；没有则必填）" };
+    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(60) };
 
     public GitCommand() : base("git", "git 透传（init/clone 为 wtangent 包装，其余参数直跑真 git；--server 远程执行）")
     {
@@ -32,9 +32,9 @@ public sealed class GitCommand : Command
         {
             var args = pr.UnmatchedTokens.ToArray();
             var server = pr.GetValue(ServerOption);
-            if (server is not null)
-                return RemoteRun(server, pr.GetValue(ProjectOption), args);
-            return new GitStore(pr.GetValue(DirOption) ?? ".").RunGit(args);
+            return server is not null
+                ? RemoteRun(server, pr.GetValue(ProjectOption), args)
+                : new GitStore(pr.GetValue(DirOption) ?? ".").RunGit(args);
         });
     }
 
@@ -55,9 +55,8 @@ public sealed class GitCommand : Command
         }
         try
         {
-            using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
             var body = JsonSerializer.Serialize(new { project, args });
-            using var resp = http.PostAsync($"{hit.Url.TrimEnd('/')}/git-exec",
+            using var resp = Http.PostAsync($"{hit.Url.TrimEnd('/')}/git-exec",
                 new StringContent(body, Encoding.UTF8, "application/json")).GetAwaiter().GetResult();
             var text = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             if (!resp.IsSuccessStatusCode)

@@ -16,7 +16,7 @@ public sealed class ServerRegistry
     private static string StorePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "agent", "remotes.json");
 
-    private static IAppStore? AppStore => Entry.App?.Store;
+    private static IAppStore? AppStore => Entry.App.Store;
 
     public string? Get(string name) => Load().FirstOrDefault(r => r.Name == name)?.Url;
 
@@ -25,13 +25,10 @@ public sealed class ServerRegistry
         Load().FirstOrDefault(r => r.EtCode is { Length: > 0 } && r.EtCode == codeOrName)
         ?? Load().FirstOrDefault(r => r.Name == codeOrName);
 
-    private List<RemoteEntry> Load()
+    private static List<RemoteEntry> Load()
     {
-        if (AppStore is not null)
-        {
-            var viaStore = AppStore.ReadJson<List<RemoteEntry>>("remotes.json");
-            if (viaStore is not null) return viaStore;
-        }
+        var viaStore = AppStore?.ReadJson<List<RemoteEntry>>("remotes.json");
+        if (viaStore is not null) return viaStore;
         if (!File.Exists(StorePath)) return [];
         try
         {
@@ -39,16 +36,15 @@ public sealed class ServerRegistry
             using var doc = JsonDocument.Parse(json);
             if (doc.RootElement.ValueKind == JsonValueKind.Object)
             {
-                return doc.RootElement.EnumerateObject()
-                    .Select(p => EntryFromUrl(p.Name, p.Value.GetString() ?? ""))
-                    .ToList();
+                return [.. doc.RootElement.EnumerateObject()
+                    .Select(p => EntryFromUrl(p.Name, p.Value.GetString() ?? ""))];
             }
             if (json.Contains("\"Code\":", StringComparison.Ordinal) && !json.Contains("\"EtCode\":", StringComparison.Ordinal))
                 json = json.Replace("\"Code\":", "\"EtCode\":", StringComparison.Ordinal);
             if (!json.Contains("\"Url\":", StringComparison.Ordinal) || json.Contains("\"Host\":", StringComparison.Ordinal))
                 return JsonSerializer.Deserialize<List<RemoteEntry>>(json) ?? [];
             var old = JsonSerializer.Deserialize<List<OldRemote>>(json) ?? [];
-            return old.Select(o => EntryFromUrl(o.Name, o.Url, o.EtCode, o.Kind)).ToList();
+            return [.. old.Select(o => EntryFromUrl(o.Name, o.Url, o.EtCode, o.Kind))];
         }
         catch { return []; }
     }
