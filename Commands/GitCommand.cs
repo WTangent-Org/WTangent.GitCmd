@@ -1,7 +1,7 @@
 using System.CommandLine;
 using System.Text;
 using System.Text.Json;
-using WTangent.GitCmd.Store;
+using WTangent.Core;
 
 namespace WTangent.GitCmd.Commands;
 
@@ -41,7 +41,7 @@ public sealed class GitCommand : Command
     /// <summary>远程模式：POST {server}/git-exec {project, args} → 服务端项目目录跑 git，打印输出返回退出码</summary>
     private static int RemoteRun(string server, string? project, string[] args)
     {
-        var hit = new ServerRegistry().Find(server);
+        var hit = new ServerRegistry(store: Entry.App.Store).Find(server);
         if (hit is null)
         {
             Console.Error.WriteLine($"[git --server] 服务器 {server} 未配置，先 wtangent remote add {server} <ip> <port>");
@@ -106,7 +106,7 @@ public sealed class GitCommand : Command
             var server = pr.GetValue(serverArg);
             var project = pr.GetValue(projectArg);
             if (server is null || project is null) return 1;
-            var hit = new ServerRegistry().Find(server);
+            var hit = new ServerRegistry(store: Entry.App.Store).Find(server);
             if (hit is null)
             {
                 await Console.Error.WriteLineAsync($"[git clone] 服务器 {server} 未配置，先 wtangent remote add {server} <ip> <port>");
