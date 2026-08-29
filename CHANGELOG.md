@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3](https://github.com/WTangent-Org/WTangent.GitCmd/compare/v0.0.2...v0.0.3) (2026-08-29)
+
+
+### Features
+
+* App 静态属性构造注入（PCL-CE 式）：生成器产 static App + ctor，IEntry 移除 App 成员 ([1ddf326](https://github.com/WTangent-Org/WTangent.GitCmd/commit/1ddf32683e390a38d1c44920d466785ccac75add))
+* 最终特性集 [AgentEntry(id,name,isAsync)]/[EntryStart]/[EntryStop]/[AgentCommand(parent)]/[AgentTool] ([6c3b177](https://github.com/WTangent-Org/WTangent.GitCmd/commit/6c3b1779cba7effb0d72fdb315e51e607b85b6d9))
+* 构造注入 App（无 null!）+ Current 静态桥（PCL-CE 式）；钩子实例方法，纯业务 ([c2c876a](https://github.com/WTangent-Org/WTangent.GitCmd/commit/c2c876ab54ba52838648a6197bd230ea2d7347f4))
+
+
+### Bug Fixes
+
+* CI 布局——本仓 checkout 进同名子目录复刻本地工作区布局（ProjectReference 的 ../ 不再越出工作区），构建路径加前缀 ([1ef73f7](https://github.com/WTangent-Org/WTangent.GitCmd/commit/1ef73f75396b46450dff2150f139c8638a38f681))
+
 ## [0.0.2](https://github.com/WTangent-Org/WTangent.GitCmd/compare/v0.0.1...v0.0.2) (2026-08-22)
 
 
