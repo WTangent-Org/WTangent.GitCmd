@@ -10,7 +10,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <!-- 版本号与 release tag 对齐；release-please 管理 -->
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <RootNamespace>WTangent.GitCmd</RootNamespace>
     <AssemblyName>git-cmd</AssemblyName>
   </PropertyGroup>
